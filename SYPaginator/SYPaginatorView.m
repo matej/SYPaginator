@@ -84,37 +84,51 @@
 
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		self.clipsToBounds = YES;
-		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		self.numberOfPagesToPreload = 2;
-		
-		// Scroll view
-		_scrollView = [[SYPaginatorScrollView alloc] initWithFrame:self.bounds];
-		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_scrollView.pagingEnabled = YES;
-		_scrollView.showsVerticalScrollIndicator = NO;
-		_scrollView.showsHorizontalScrollIndicator = NO;
-		_scrollView.alwaysBounceHorizontal = YES;
-		_scrollView.scrollsToTop = NO;
-		[(SYPaginatorScrollView *)_scrollView setPrivateDelegate:self];
-		[self addSubview:_scrollView];
-		
-		// Page control
-		CGSize size = self.bounds.size;
-		_pageControl = [[SYPageControl alloc] initWithFrame:CGRectMake(0.0f, size.height - 18.0f, size.width, 18.0f)];
-		_pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-		_pageControl.currentPage = 0;
-		[_pageControl addTarget:self action:@selector(_pageControlChanged:) forControlEvents:UIControlEventValueChanged];
-		[self addSubview:_pageControl];
-		
-		// Setup views cache
-		_pages = [[NSMutableDictionary alloc] init];
-		_reuseablePages = [[NSMutableDictionary alloc] init];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cleanup)
-													 name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+		[self sharedInit];
 	}
 	return self;
+}
+
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super initWithCoder:aDecoder];
+	if (self) {
+		[self sharedInit];
+	}
+	return self;
+}
+
+
+- (void)sharedInit {
+	self.clipsToBounds = YES;
+	self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.numberOfPagesToPreload = 2;
+	
+	// Scroll view
+	_scrollView = [[SYPaginatorScrollView alloc] initWithFrame:self.bounds];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	_scrollView.pagingEnabled = YES;
+	_scrollView.showsVerticalScrollIndicator = NO;
+	_scrollView.showsHorizontalScrollIndicator = NO;
+	_scrollView.alwaysBounceHorizontal = YES;
+	_scrollView.scrollsToTop = NO;
+	[(SYPaginatorScrollView *)_scrollView setPrivateDelegate:self];
+	[self addSubview:_scrollView];
+	
+	// Page control
+	CGSize size = self.bounds.size;
+	_pageControl = [[SYPageControl alloc] initWithFrame:CGRectMake(0.0f, size.height - 18.0f, size.width, 18.0f)];
+	_pageControl.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+	_pageControl.currentPage = 0;
+	[_pageControl addTarget:self action:@selector(_pageControlChanged:) forControlEvents:UIControlEventValueChanged];
+	[self addSubview:_pageControl];
+	
+	// Setup views cache
+	_pages = [[NSMutableDictionary alloc] init];
+	_reuseablePages = [[NSMutableDictionary alloc] init];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cleanup)
+												 name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
 
 
