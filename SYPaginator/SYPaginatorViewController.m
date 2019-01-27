@@ -45,15 +45,9 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	
+
 	_paginator.frame = self.view.bounds;
 	[self.view addSubview:_paginator];
-}
-
-
-- (void)viewDidUnload {
-	[super viewDidUnload];
-	[_paginator removeFromSuperview];
 }
 
 
